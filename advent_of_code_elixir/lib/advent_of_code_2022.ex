@@ -2,7 +2,8 @@ defmodule AdventOfCode2022 do
   alias AdventOfCode2022
 
   @solutions [
-    %{day: "01", title: "Calorie Counting", function: &AdventOfCode2022.Day01.run/1}
+    %{day: "01", title: "Calorie Counting", function: &AdventOfCode2022.Day01.run/1},
+    %{day: "02", title: "Rock Paper Scissors", function: &AdventOfCode2022.Day02.run/1}
   ]
 
   @table_mapping [
