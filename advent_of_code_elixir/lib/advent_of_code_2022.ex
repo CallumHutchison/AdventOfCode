@@ -5,7 +5,9 @@ defmodule AdventOfCode2022 do
     %{day: "01", title: "Calorie Counting", function: &AdventOfCode2022.Day01.run/1},
     %{day: "02", title: "Rock Paper Scissors", function: &AdventOfCode2022.Day02.run/1},
     %{day: "03", title: "Rucksack Reorganization", function: &AdventOfCode2022.Day03.run/1},
-    %{day: "04", title: "Camp Cleanup", function: &AdventOfCode2022.Day04.run/1}
+    %{day: "04", title: "Camp Cleanup", function: &AdventOfCode2022.Day04.run/1},
+    %{day: "05", title: "Supply Stacks", function: &AdventOfCode2022.Day05.run/1},
+    %{day: "06", title: "Tuning Trouble", function: &AdventOfCode2022.Day06.run/1}
   ]
 
   @table_mapping [
