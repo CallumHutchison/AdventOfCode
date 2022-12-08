@@ -8,7 +8,8 @@ defmodule AdventOfCode2022 do
     %{day: "04", title: "Camp Cleanup", function: &AdventOfCode2022.Day04.run/1},
     %{day: "05", title: "Supply Stacks", function: &AdventOfCode2022.Day05.run/1},
     %{day: "06", title: "Tuning Trouble", function: &AdventOfCode2022.Day06.run/1},
-    %{day: "07", title: "No Space Left On Device", function: &AdventOfCode2022.Day07.run/1}
+    %{day: "07", title: "No Space Left On Device", function: &AdventOfCode2022.Day07.run/1},
+    %{day: "08", title: "Treetop Tree House", function: &AdventOfCode2022.Day08.run/1}
   ]
 
   @table_mapping [
