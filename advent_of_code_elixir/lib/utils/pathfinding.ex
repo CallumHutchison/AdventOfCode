@@ -1,4 +1,22 @@
 defmodule AdventOfCode2022.Utils.Pathfinding do
+  @doc """
+  Calculate the shortest path between two positions
+  
+  ## Arguments:
+  `start`: The ID of the starting position
+  `target`: The ID of the position to create a path to
+  `connections`: Either the connections between positions in the graph, with costs for each connection,
+  or a function which takes in a position and returns an array of tuples `{connected_pos, cost}`
+  
+  ## Examples
+  
+      iex> AdventOfCode2022.Utils.Pathfinding.get_path(
+      ...>  {0, 0},
+      ...>  {0, 2},
+      ...>  %{{0,0}: [{{0,1}, 1}, {{1, 0}, 1}], {0,1}: [{{0, 2}, 1}]}
+      ...>)
+      [{0, 0}, {0, 1}, {0, 2}]
+  """
   def get_path(start, target, connections) do
     get_path(target, connections, [%{position: start, distance: 0, parent: nil}], MapSet.new())
   end

@@ -16,7 +16,10 @@ defmodule AdventOfCode2022.Day12 do
       |> Enum.map(&elem(&1, 0))
 
     part2 =
-      Enum.map(possible_starts, &get_shortest_path_length(connections, &1, end_pos))
+      Enum.map(possible_starts, fn pos ->
+        Task.async(fn -> get_shortest_path_length(connections, pos, end_pos) end)
+      end)
+      |> Task.await_many(10_000)
       |> Enum.filter(&(&1 != :unreachable))
       |> Enum.sort(:asc)
       |> List.first()
@@ -39,11 +42,9 @@ defmodule AdventOfCode2022.Day12 do
         end)
       end)
 
-    {start_pos, _} =
-      Enum.filter(elevations, fn {_pos, {_elevation, type}} -> type == :start end) |> List.first()
+    {start_pos, _} = Enum.find(elevations, fn {_pos, {_elevation, type}} -> type == :start end)
 
-    {end_pos, _} =
-      Enum.filter(elevations, fn {_pos, {_elevation, type}} -> type == :end end) |> List.first()
+    {end_pos, _} = Enum.find(elevations, fn {_pos, {_elevation, type}} -> type == :end end)
 
     elevations = Enum.map(elevations, fn {pos, {height, _}} -> {pos, height} end)
 

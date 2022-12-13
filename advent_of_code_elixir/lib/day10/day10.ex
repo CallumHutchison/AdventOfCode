@@ -5,7 +5,6 @@ defmodule AdventOfCode2022.Day10 do
 
     part1 =
       Enum.map([20, 60, 100, 140, 180, 220], fn n -> Enum.at(output, n - 1) * n end)
-      |> IO.inspect()
       |> Enum.sum()
 
     part2 = display_screen(output, 40)
