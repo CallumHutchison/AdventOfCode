@@ -14,7 +14,8 @@ defmodule AdventOfCode2022 do
     %{day: "10", title: "Cathode-Ray Tube", function: &AdventOfCode2022.Day10.run/1},
     %{day: "11", title: "Monkey in the Middle", function: &AdventOfCode2022.Day11.run/1},
     %{day: "12", title: "Hill Climbing Algorithm", function: &AdventOfCode2022.Day12.run/1},
-    %{day: "13", title: "Distress Signal", function: &AdventOfCode2022.Day13.run/1}
+    %{day: "13", title: "Distress Signal", function: &AdventOfCode2022.Day13.run/1},
+    %{day: "14", title: "Regolith Reservoir", function: &AdventOfCode2022.Day14.run/1}
   ]
 
   @table_mapping [
