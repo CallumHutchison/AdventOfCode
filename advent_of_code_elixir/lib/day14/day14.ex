@@ -1,11 +1,17 @@
 defmodule AdventOfCode2022.Day14 do
+  @origin {500, 0}
   def run(input_file_name) do
     obstacles = load_input(input_file_name)
 
     {_, max_y} = Enum.max_by(obstacles, fn {_x, y} -> y end)
-    part1 = MapSet.size(pour_sand(obstacles, {500, 0}, max_y + 1)) - MapSet.size(obstacles)
 
-    part2 = MapSet.size(pour_sand(obstacles, {500, 0}, max_y + 1, false)) - MapSet.size(obstacles)
+    part1_state = pour_sand(obstacles, @origin, max_y + 1)
+    part1 = MapSet.size(part1_state) - MapSet.size(obstacles)
+    print_image(part1_state, obstacles, "lib/day14/part1_output.txt")
+
+    part2_state = pour_sand(obstacles, @origin, max_y + 1, false)
+    part2 = MapSet.size(part2_state) - MapSet.size(obstacles)
+    print_image(part2_state, obstacles, "lib/day14/part2_output.txt")
 
     {part1, part2}
   end
@@ -31,6 +37,26 @@ defmodule AdventOfCode2022.Day14 do
       [{x1, y}, {x2, y}] ->
         Enum.map(x1..x2, fn x -> {x, y} end)
     end)
+  end
+
+  defp print_image(final_state, initial_state, file_path) do
+    {{min_x, _}, {max_x, _}} = Enum.min_max_by(final_state, fn {x, _y} -> x end)
+    {_, max_y} = Enum.max_by(final_state, fn {_x, y} -> y end)
+
+    image =
+      Enum.map(0..max_y, fn y ->
+        Enum.map(min_x..max_x, fn x ->
+          cond do
+            {x, y} in initial_state -> "#"
+            {x, y} in final_state -> "O"
+            true -> " "
+          end
+        end)
+        |> Enum.join()
+      end)
+      |> Enum.join("\n")
+
+    File.write!(file_path, image)
   end
 
   @doc """
