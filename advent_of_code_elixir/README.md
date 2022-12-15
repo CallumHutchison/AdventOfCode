@@ -1,4 +1,4 @@
-# AdventOfCode2022
+# Advent Of Code - Elixir Solutions
 
 **TODO: Add description**
 
