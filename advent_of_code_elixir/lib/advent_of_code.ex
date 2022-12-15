@@ -1,5 +1,6 @@
 defmodule AdventOfCode do
   @years [
+    AdventOfCode.Year2021,
     AdventOfCode.Year2022
   ]
 
@@ -12,7 +13,7 @@ defmodule AdventOfCode do
     {"Total execution time (s)", :time}
   ]
 
-  def run_all do
+  def run do
     Enum.flat_map(@years, fn year -> year.run() end)
     |> Scribe.print(data: @table_mapping)
   end
@@ -24,5 +25,21 @@ defmodule AdventOfCode do
 
   def run(module, input_file_name) do
     module.run(input_file_name)
+  end
+
+  def time_task(%{year: year, day: day, title: title, function: nil}) do
+    %{
+      year: year,
+      day: day,
+      title: title,
+      part1: "n/a - Done in JS",
+      part2: "n/a - Done in JS",
+      time: "n/a"
+    }
+  end
+
+  def time_task(%{year: year, day: day, title: title, function: function}) do
+    {time, {part1, part2}} = :timer.tc(function, ["input"])
+    %{year: year, day: day, title: title, part1: part1, part2: part2, time: time / 1_000_000}
   end
 end

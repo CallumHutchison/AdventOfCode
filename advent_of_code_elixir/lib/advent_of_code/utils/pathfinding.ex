@@ -1,4 +1,4 @@
-defmodule AdventOfCode.Year2022.Utils.Pathfinding do
+defmodule AdventOfCode.Utils.Pathfinding do
   @doc """
   Calculate the shortest path between two positions
   
