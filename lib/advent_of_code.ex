@@ -42,4 +42,13 @@ defmodule AdventOfCode do
     {time, {part1, part2}} = :timer.tc(function, ["input"])
     %{year: year, day: day, title: title, part1: part1, part2: part2, time: time / 1_000_000}
   end
+
+  def load_input(year, day, file_name) do
+    File.read!("priv/inputs/#{year}/day#{day}/#{file_name}.txt")
+  end
+
+  def load_input_lines(year, day, file_name) do
+    load_input(year, day, file_name)
+    |> String.split(~r/\R/)
+  end
 end
