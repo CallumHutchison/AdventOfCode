@@ -21,6 +21,15 @@ defmodule AdventOfCode.Utils.Pathfinding do
     get_path(target, connections, [%{position: start, distance: 0, parent: nil}], MapSet.new())
   end
 
+  def get_path_cost([pos, next_pos | path], connections) do
+    (Enum.find(connections[pos], &(elem(&1, 0) == next_pos))
+     |> elem(1)) + get_path_cost(path, connections)
+  end
+
+  def get_path_cost(_path, connections) do
+    0
+  end
+
   defp get_path(_target, _connections, [], _closed_set) do
     :unreachable
   end

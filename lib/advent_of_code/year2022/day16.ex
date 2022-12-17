@@ -29,11 +29,30 @@ defmodule AdventOfCode.Year2022.Day16 do
   def prune_graph(graph) do
     nodes = Map.filter(graph, fn {_, %{flow_rate: flow_rate}} -> flow_rate > 0 end)
 
-    Enum.map(nodes, fn {node, %{connections: connections, flow_rate: flow_rate}} ->
+    graph =
+      Enum.map(nodes, fn {node, %{connections: connections, flow_rate: flow_rate}} ->
+        {node,
+         %{
+           flow_rate: flow_rate,
+           connections: Enum.flat_map(connections, &simplify_connection(graph, node, elem(&1, 0)))
+         }}
+      end)
+      |> Map.new()
+
+    connections =
+      Map.new(graph, fn {node, %{connections: connections}} -> {node, connections} end)
+
+    Enum.map(graph, fn {node, %{flow_rate: flow_rate}} ->
       {node,
        %{
          flow_rate: flow_rate,
-         connections: Enum.flat_map(connections, &simplify_connection(graph, node, elem(&1, 0)))
+         connections:
+           Enum.map(graph, fn {connection, _} ->
+             {connection,
+              AdventOfCode.Utils.Pathfinding.get_path(node, connection, connections)
+              |> AdventOfCode.Utils.Pathfinding.get_path_cost(connections)}
+           end)
+           |> Enum.filter(fn {_, cost} -> cost > 0 end)
        }}
     end)
     |> Map.new()
@@ -81,6 +100,7 @@ defmodule AdventOfCode.Year2022.Day16 do
         opened_valves: MapSet.new()
       })
     end)
+    |> Enum.max()
   end
 
   def find_highest_pressure(_graph, _node, state) when state.time >= state.max_time,
@@ -91,33 +111,31 @@ defmodule AdventOfCode.Year2022.Day16 do
         node,
         state
       ) do
-    IO.inspect({node, state.pressure, state.time})
+    if node not in state.opened_valves do
+      find_highest_pressure(graph, node, %{
+        state
+        | pressure: state.pressure + state.pressure_per_step,
+          pressure_per_step: state.pressure_per_step + graph[node].flow_rate,
+          time: state.time + 1,
+          opened_valves: MapSet.put(state.opened_valves, node)
+      })
+    else
+      Enum.filter(
+        graph[node].connections,
+        &(elem(&1, 1) <= state.max_time - state.time && elem(&1, 0) not in state.opened_valves)
+      )
+      |> Enum.map(fn {next_node, cost} ->
+        find_highest_pressure(graph, next_node, %{
+          state
+          | pressure: state.pressure + state.pressure_per_step * cost,
+            time: state.time + cost
+        })
+      end)
+      |> Enum.max(fn ->
+        IO.puts("Ran out of connections at time=#{state.time}")
 
-    opened_valve_state =
-      if node in state.opened_valves,
-        do: [],
-        else: [
-          find_highest_pressure(graph, node, %{
-            state
-            | pressure: state.pressure + state.pressure_per_step,
-              pressure_per_step: state.pressure_per_step + graph[node].flow_rate,
-              time: state.time + 1,
-              opened_valves: MapSet.put(state.opened_valves, node)
-          })
-        ]
-
-    (opened_valve_state ++
-       (Enum.filter(
-          graph[node].connections,
-          &(elem(&1, 1) <= state.max_time - state.time && elem(&1, 0) not in state.opened_valves)
-        )
-        |> Enum.map(fn {next_node, cost} ->
-          find_highest_pressure(graph, next_node, %{
-            state
-            | pressure: state.pressure + state.pressure_per_step,
-              time: state.time + cost
-          })
-        end)))
-    |> Enum.max(fn -> state.pressure end)
+        state.pressure + state.pressure_per_step * (state.max_time - state.time - 1)
+      end)
+    end
   end
 end
