@@ -83,11 +83,18 @@ defmodule AdventOfCode.Year2022 do
       day: 14,
       title: "Regolith Reservoir",
       function: &AdventOfCode.Year2022.Day14.run/1
+    },
+    %{
+      year: 2022,
+      day: 15,
+      title: "Beacon Exclusion Zone",
+      function: &AdventOfCode.Year2022.Day15.run/1
     }
   ]
 
   def run do
     @solutions
-    |> Enum.map(&AdventOfCode.time_task/1)
+    |> Enum.map(fn solution -> Task.async(fn -> AdventOfCode.time_task(solution) end) end)
+    |> Task.await_many(10_000)
   end
 end

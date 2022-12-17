@@ -92,6 +92,7 @@ defmodule AdventOfCode.Year2021 do
 
   def run do
     @solutions
-    |> Enum.map(&AdventOfCode.time_task/1)
+    |> Enum.map(fn solution -> Task.async(fn -> AdventOfCode.time_task(solution) end) end)
+    |> Task.await_many(10_000)
   end
 end
